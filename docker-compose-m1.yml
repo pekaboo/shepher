@@ -1,0 +1,36 @@
+version: '2'
+services:
+  db:
+    image: cf-docker.wangyitu.tech/mysql:5.6
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: shepher
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql   # 修改这里，直接指向根目录的init.sql
+    ports:
+      - "3305:3306"
+    networks:
+      - shepher-network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile-m1    # 指定 Dockerfile
+    image: shepher
+    ports:
+      - "8085:8089"
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=shepher
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - JAVA_OPTS=-Xmx512m -Xms256m
+    depends_on:
+      - db
+    networks:
+      - shepher-network
+
+networks:
+  shepher-network:
+    driver: bridge
