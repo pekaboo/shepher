@@ -1,0 +1,8 @@
+{
+  "features": {
+    "java": {
+      "version": "8"
+    },
+    "maven": {}
+  }
+}
